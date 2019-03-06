@@ -1,0 +1,60 @@
+
+
+MVC：Model-View-Controller
+
+--DispatcherServelet：
+是前端控制器设计模式的实现，提供Spring Web MVC的集中访问点，而且负责职责的分派，而且与Spring IoC容器无缝集成，从而可以获得Spring的所有好处。
+DispatcherServlet实际上是一个Servlet(它从HttpServlet继承而来)。和其它Servlet一样，DispatcherServlet定义在web应用的web.xml文件里。DispatcherServlet处理的请求必须在同一个web.xml文件里使用url-mapping定义映射。
+
+DispatcherServlet主要用作职责调度工作，本身主要用于控制流程，主要职责如下：
+1、文件上传解析，如果请求类型是multipart将通过MultipartResolver进行文件上传解析；
+2、通过HandlerMapping，将请求映射到处理器（返回一个HandlerExecutionChain，它包括一个处理器、多个HandlerInterceptor拦截器）；
+3、通过HandlerAdapter支持多种类型的处理器(HandlerExecutionChain中的处理器)；
+4、通过ViewResolver解析逻辑视图名到具体视图实现；
+5、本地化解析；
+6、渲染具体的视图等；
+7、如果执行过程中遇到异常将交给HandlerExceptionResolver来解析。
+
+
+--使用maven搭建SpringMVC工程
+
+pom.xml配置项目依赖和插件
+
+web.xml配置：
+过滤页面字符编码：CharacterEncodingFilter
+<filter>  
+    <filter-name>characterEncodingFilter</filter-name>  
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+    <init-param>  
+        <param-name>encoding</param-name>  
+        <param-value>UTF-8</param-value>  
+    </init-param>  
+    <init-param>  
+        <param-name>forceEncoding</param-name>  
+        <param-value>true</param-value>  
+    </init-param>  
+</filter>  
+<filter-mapping>  
+    <filter-name>characterEncodingFilter</filter-name>  
+    <url-pattern>/*</url-pattern>  
+</filter-mapping> 
+
+<!--声明DispatcherServlet-->
+<servlet>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--配置自定义文件地址-->
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:mvc-dispatcher-servlet.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+
+<context:annotation-config>
+是用于激活那些已经在spring容器里注册过的bean（无论是通过xml的方式还是通
+过package sanning的方式）上面的注解。
+<context:component-scan>
+除了具有<context:annotation-config>的功能之外，<context:component-scan>
+还可以在指定的package下扫描以及注册javabean，当两个标签都配置时，只有后者起作用
