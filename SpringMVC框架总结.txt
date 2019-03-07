@@ -2,6 +2,7 @@
 
 MVC：Model-View-Controller
 
+
 --DispatcherServelet：
 是前端控制器设计模式的实现，提供Spring Web MVC的集中访问点，而且负责职责的分派，而且与Spring IoC容器无缝集成，从而可以获得Spring的所有好处。
 DispatcherServlet实际上是一个Servlet(它从HttpServlet继承而来)。和其它Servlet一样，DispatcherServlet定义在web应用的web.xml文件里。DispatcherServlet处理的请求必须在同一个web.xml文件里使用url-mapping定义映射。
@@ -14,6 +15,7 @@ DispatcherServlet主要用作职责调度工作，本身主要用于控制流程
 5、本地化解析；
 6、渲染具体的视图等；
 7、如果执行过程中遇到异常将交给HandlerExceptionResolver来解析。
+
 
 
 --使用maven搭建SpringMVC工程
@@ -58,3 +60,36 @@ web.xml配置：
 <context:component-scan>
 除了具有<context:annotation-config>的功能之外，<context:component-scan>
 还可以在指定的package下扫描以及注册javabean，当两个标签都配置时，只有后者起作用
+
+
+
+--forward与redirect的区别 
+
+forward是服务器请求资源，服务器直接访问目标地址的URL，把那个URL的响应内容读取过来，然后把这些内容再发给浏览器，浏览器根本不知道服务器发送的内容是从哪儿来的，所以它的地址栏中还是原来的地址。还有，转发是在web应用程序之内进行的，可以访问web应用程序所设定的内部目录，像是WEB-INF目录，只能在Web应用程序中进行，不能指定至其它的Web应用程序的地址。 
+
+redirect就是服务端根据逻辑,发送一个状态码,告诉浏览器重新去请求那个地址，一般来说浏览器会用刚才请求的所有参数重新请求，所以session,request参数都可以获取。web应用程序会要求客户端浏览器重新发出请求地址，客户端会重新连接至所指定的地址，因此浏览器的地址会出现重新导向的信息，重新导向后的请求由浏览器发出，所以不能访问Web应用程序中的隐藏目录，像是WEB-INF，重新是由浏览器重新要求一个网页，可以指定至其他的Web应用程序地址。
+
+
+--RequestDispatcher.forward()方法和HttpServletResponse.sendRedirect()方法的区别是：
+
+前者仅是容器中控制权的转向，在客户端浏览器地址栏中不会显示出转向后的地址，他是不会改变Request的值，如果你需要在下一个页面中能从中获取新的信息的话，你可以Request.setAttribute()来放置一些标志，这样从下一个页面中获取；后者则是完全的跳转，浏览器将会得到跳转的地址，并重新发送请求链接。这样，从浏览器的地址栏中可以看到跳转后的链接地址。所以，前者更加高效，在前者可以满足需要时，尽量使用RequestDispatcher.forward()方法，并且，这样也有助于隐藏实际的链接。在有些情况下，比如，需要跳转到一个其它服务器上的资源，则必须使用 HttpServletResponse.sendRequest()方法。
+
+1、forward与include共亨Request范围内的对象,而redirect则不行，即：如果一个javabean被声明为request范围的话，则被forward到的资源也可以访问这个javabean,而redriect则不行。 
+2、forward与include基本上都是转发到context内部的资源，而redirect可以重定向到外部的资源,如： req.sendRedriect  
+
+->从地址栏显示来说:
+forward是服务器请求资源,服务器直接访问目标地址的URL,把那个URL的响应内容读取过来,然后把这些内容再发给浏览器.浏览器根本不知道服务器发送的内容从哪里来的,所以它的地址栏还是原来的地址. 
+redirect是服务端根据逻辑,发送一个状态码,告诉浏览器重新去请求那个地址.所以地址栏显示的是新的URL. 
+
+->从数据共享来说: 
+forward:转发页面和转发到的页面可以共享request里面的数据.   
+redirect:不能共享数据. 
+
+->从运用地方来说:
+forward:一般用于用户登陆的时候,根据角色转发到相应的模块. 
+redirect:一般用于用户注销登陆时返回主页面和跳转到其它的网站等. 
+
+->从效率来说:
+forward:高.    
+redirect:低.  
+

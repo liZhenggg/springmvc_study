@@ -9,6 +9,7 @@
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
     <!--向spring容器中注入@Autowired @Resource @PostConstruct @PreDestory 4个注解对应的beanPostProcessor -->
     <!--<context:annotation-config/>-->
 
@@ -16,11 +17,17 @@
         并且会开启自动的组件扫描功能扫描basepackage属性指定的包路径。
         当两个标签都配置在xml文件中时，只有后者会起作用-->
     <context:component-scan base-package="com.lzg.mvcdemo">
+        <!--context:include-filter只扫描配置的包-->
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+    <!--扩展注解驱动，将请求参数绑定到控制器参数-->
     <mvc:annotation-driven/>
 
+    <!--静态资源处理，css,js,imgs...-->
+    <mvc:resources mapping="/resources/**" location="/"/>
+
+    <!--配置ViewResolver.可以用多个ViewResolver,使用order排序。InternalResourceViewResolver放在最后-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/jsp/"/>
