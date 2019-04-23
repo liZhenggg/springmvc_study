@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>spring_mvc_pro</display-name>
+
+
+    <!--Spring集成Web环境的通用配置，是全局性的，用于对整个Spring容器相关的bean配置管理
+        原理：利用 ServletContextListener 实现，Spring 提供ServletContextListener 的一个实现类 ContextLoaderListener，
+        该类可以作为listener 使用，默认读取 /WEB-INF/applicationContext.xml 文件。
+        因此，如果只有一个配置文件，并且文件名为applicationContext.xml ，则可省略<context-param>的配置。-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <!--如果配置多个配置文件，可以在<param-value>标记中用逗号作分隔符或使用匹配符。-->
+        <param-value>/WEB-INF/configs/spring/applicationContext*.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <!--DispatcherServlet,Spring MVC的核心-->
+    <!--默认读取 /WEB-INF/[servlet-name]-servlet.xml 文件作为SpringMVC的核心配置。-->
+    <servlet>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/configs/spring/mvc-dispatcher-servlet.xml</param-value>
+        </init-param>
+
+        <!--标记容器是否应该在web应用程序启动的时候就加载这个servlet(实例化并调用其init()方法)
+        以及servlet被加载的先后顺序，值越小servlet的优先级越高-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <!--表示拦截所有请求-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+
+    <!--在Spring框架中是如何解决从页面传来的字符串的编码问题的呢？CharacterEncodingFilter-->
+    <!--这个过滤器就是针对于每次浏览器请求进行过滤的，然后再其之上添加了父类没有的功能即处理字符编码。-->
+    <!--其中encoding用来设置编码格式，forceEncoding用来设置是否理会request.getCharacterEncoding()方法，设置为true则强制覆盖之前的编码格式。-->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>

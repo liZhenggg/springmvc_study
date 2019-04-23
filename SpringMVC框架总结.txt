@@ -1,5 +1,4 @@
 
-
 MVC：Model-View-Controller
 
 
@@ -93,3 +92,8 @@ redirect:一般用于用户注销登陆时返回主页面和跳转到其它的�
 forward:高.    
 redirect:低.  
 
+
+-- 使用jetty插件启动项目:
+1.pom.xml添加jetty依赖:maven-jetty-plugin
+2.在项目根目录使用控制台命令:
+$ mvn jetty:run

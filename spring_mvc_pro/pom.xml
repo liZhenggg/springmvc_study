@@ -61,6 +61,7 @@
     <!--插件-->
     <build>
         <plugins>
+            <!-- 使用jetty插件启动工程 -->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
